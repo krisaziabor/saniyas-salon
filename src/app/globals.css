@@ -1,5 +1,37 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Lector FSL";
+  src: url("https://framerusercontent.com/assets/vVIFTY2PuwIapN7qdnad4UmbNg.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lector FSL";
+  src: url("https://framerusercontent.com/assets/gIKaTQlrDZ7Ii4BzPli1xVtOIIE.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lector FSL";
+  src: url("https://framerusercontent.com/assets/KKTMS6aDxphvlz9vQ9HtZgLlMrk.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Diatype Semi-Mono";
+  src: url("/fonts/ABCDiatypeSemi-MonoEdu-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -10,6 +42,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-lector: "Lector FSL", serif;
+  --font-diatype: "Diatype Semi-Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +56,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lector);
 }
