@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import PageShell from "@/components/PageShell";
 import { useState } from "react";
 
 const castMembers = [
@@ -56,102 +55,42 @@ export default function Cast() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <div
-      className="min-h-screen relative"
-      style={{
-        backgroundImage: "url(/background.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed"
-      }}
-    >
-      <div className="min-h-screen flex flex-col">
-        {/* Main Content */}
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Cast List */}
-            <div className="text-[#FFE4C0]">
-              <div className="space-y-2">
-                {castMembers.map((member, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-2 gap-x-3 cursor-pointer hover:opacity-70 transition-opacity"
-                    onClick={() => setSelectedIndex(index)}
-                  >
-                    <p
-                      style={{
-                        color: selectedIndex === index ? "#EEB363" : undefined
-                      }}
-                    >
-                      {member.character}
-                    </p>
-                    <p
-                      className="font-semibold"
-                      style={{
-                        color: selectedIndex === index ? "#EEB363" : undefined
-                      }}
-                    >
-                      {member.actor}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Bio Section */}
-            <div className="text-[#FFE4C0] mt-8 lg:mt-0">
-              <p className="leading-snug">{castMembers[selectedIndex].bio}</p>
-            </div>
-          </div>
-        </main>
-
-        {/* Navigation Menu */}
-        <nav className="px-4 sm:px-6 lg:px-8 py-6">
-          <ul
-            className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 text-[#FFE4C0] uppercase"
-            style={{ fontFamily: "var(--font-diatype)" }}
-          >
-            <li>
-              <Link href="/" className="hover:opacity-70 transition-opacity">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/cast"
-                className="hover:opacity-70 transition-opacity"
-                style={{ color: "#EEB363" }}
+    <PageShell pathname="/cast">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Cast List */}
+        <div className="text-[#FFE4C0]">
+          <div className="space-y-2">
+            {castMembers.map((member, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-2 gap-x-3 cursor-pointer hover:opacity-70 transition-opacity"
+                onClick={() => setSelectedIndex(index)}
               >
-                Meet The Cast
-              </Link>
-            </li>
-            <li>
-              <Link href="/notes" className="hover:opacity-70 transition-opacity">
-                Playwright+Directors Notes
-              </Link>
-            </li>
-            <li>
-              <Link href="/thanks" className="hover:opacity-70 transition-opacity">
-                Special Thanks
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Title SVG at Bottom */}
-        <div className="px-4 sm:px-6 lg:px-8 pb-8">
-          <div className="w-full max-w-full">
-            <Image
-              src="/titlesvg.svg"
-              alt="Saniya's Salon"
-              width={1319}
-              height={120}
-              className="w-full h-auto"
-              priority
-            />
+                <p
+                  style={{
+                    color: selectedIndex === index ? "#EEB363" : undefined
+                  }}
+                >
+                  {member.character}
+                </p>
+                <p
+                  className="font-semibold"
+                  style={{
+                    color: selectedIndex === index ? "#EEB363" : undefined
+                  }}
+                >
+                  {member.actor}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Bio Section */}
+        <div className="text-[#FFE4C0] mt-8 lg:mt-0">
+          <p className="leading-snug">{castMembers[selectedIndex].bio}</p>
+        </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
