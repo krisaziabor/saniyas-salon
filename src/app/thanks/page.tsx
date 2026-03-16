@@ -4,7 +4,7 @@ export default function Thanks() {
   return (
     <PageShell pathname="/thanks">
       <div className="max-w-4xl mx-auto">
-        <div className="text-[#FFE4C0] space-y-2">
+        <div className="text-[#EEB363] space-y-2">
           <p className="font-bold uppercase">Deb Margolin</p>
           <p className="font-bold uppercase">Bryanna Kim</p>
           <p className="font-bold uppercase">Mark Dionne</p>

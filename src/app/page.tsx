@@ -1,153 +1,115 @@
-import PageShell from "@/components/PageShell";
+"use client";
 
+import PageShell from "@/components/PageShell";
+import SectionHeading from "@/components/SectionHeading";
+import { castMembers } from "@/data/cast";
+import { crewMembers } from "@/data/crew";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { useContext } from "react";
+import { HomeEntranceContext } from "@/components/PageShell";
+
+const HOME_CREW_COUNT = 4;
+const EASE_OUT = [0.215, 0.61, 0.355, 1] as const;
+
+/** Four-step content stagger: 0 = date/location, 1 = synopsis, 2 = cast, 3 = crew */
 export default function Home() {
+  const crewPreview = crewMembers.slice(0, HOME_CREW_COUNT);
+  const { contentStagger, contentDuration, isHome, reducedMotion } =
+    useContext(HomeEntranceContext);
+
+  const staggerMs = isHome && !reducedMotion ? Math.max(contentStagger, 300) : 0;
+  const delay = (step: number) => (step * staggerMs) / 1000;
+
   return (
     <PageShell pathname="/">
-      {/* Three Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-        {/* Synopsis Column */}
-        <div className="text-[#FFE4C0]">
-          <h2
-            className="text-sm font-bold mb-4 uppercase opacity-80"
-            style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
-          >
-            Synopsis
-          </h2>
-          <p className="leading-snug w-full lg:w-1/2">
+      {/* 1. Date and location — full width at top */}
+      <motion.div
+        className="text-[#EEB363] mb-8 lg:mb-10 text-base font-bold uppercase"
+        style={{ fontFamily: "var(--font-lector)" }}
+        initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: contentDuration,
+          delay: delay(0),
+          ease: EASE_OUT,
+        }}
+      >
+        <p className="tracking-wide">FEB 26–28</p>
+        <p className="tracking-wide mt-1">SAYBROOK UNDERBROOK</p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12">
+        {/* 2. Synopsis — left column */}
+        <motion.div
+          className="text-[#EEB363]"
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: contentDuration,
+            delay: delay(1),
+            ease: EASE_OUT,
+          }}
+        >
+          <SectionHeading>Synopsis</SectionHeading>
+          <p className="text-base lg:text-lg leading-relaxed max-w-[45ch] tracking-tight">
             In suburban Georgia, Ritu runs a waxing salon while raising her teenage daughter, Saniya. As customers, neighbors, and love interests drift in and out, the salon becomes a crossroads of love and hurt for the brown women who enter it. When Saniya begins to question the beauty rituals her mother depends on, both women must ask what legacies they&apos;re willing to keep— and what they&apos;re ready to leave behind.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Cast List Column (2-column layout within) */}
-        <div className="text-[#FFE4C0]">
-          <h2
-            className="text-sm font-bold mb-4 uppercase opacity-80"
-            style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+        {/* 3. Cast + 4. Crew — right column, stacked */}
+        <div className="text-[#EEB363] flex flex-col gap-8 lg:gap-10">
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: contentDuration,
+              delay: delay(2),
+              ease: EASE_OUT,
+            }}
           >
-            Cast
-          </h2>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>RITU</p>
-              <p className="font-semibold">LEILA HYDER</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>SANIYA</p>
-              <p className="font-semibold">ZOYA HAQ</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>GEETHIKA</p>
-              <p className="font-semibold">BAANI KAUR</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>HEMA</p>
-              <p className="font-semibold">IMANE BOU-SABOUN</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>CHANDRA</p>
-              <p className="font-semibold">SHUBHAN MEHTA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>MAITREYI/KAVYA</p>
-              <p className="font-semibold">KATYA AGRAWAL</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>MEERA</p>
-              <p className="font-semibold">DHRITI GUPTA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>SHERRY</p>
-              <p className="font-semibold">JULIA WESTON</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>GEORGE</p>
-              <p className="font-semibold">JOHN COLBERT</p>
-            </div>
-          </div>
-        </div>
+            <SectionHeading>Cast</SectionHeading>
+            <ul className="space-y-1.5">
+              {castMembers.map((member) => (
+                <li key={member.character}>
+                  <span className="font-semibold">{member.actor}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/cast"
+              className="inline-block mt-3 text-sm uppercase hover:opacity-70 transition-opacity"
+              style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+            >
+              Meet the Cast →
+            </Link>
+          </motion.div>
 
-        {/* Crew List Column (2-column layout within) */}
-        <div className="text-[#FFE4C0]">
-          <h2
-            className="text-sm font-bold mb-4 uppercase opacity-80"
-            style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: contentDuration,
+              delay: delay(3),
+              ease: EASE_OUT,
+            }}
           >
-            Crew
-          </h2>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>PLAYWRIGHT</p>
-              <p className="font-semibold">AANIKA ERAGAM</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>DIRECTOR</p>
-              <p className="font-semibold">EDIE WOLFE LIPSEY</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>ASSISTANT DIRECTOR</p>
-              <p className="font-semibold">AANIKA ERAGAM</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>STAGE MANAGER</p>
-              <p className="font-semibold">LILLY PRICE</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>PRODUCER</p>
-              <p className="font-semibold">VICTORIA MNATSAKANYAN</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>SET DESIGNER</p>
-              <p className="font-semibold">EDIE WOLFE LIPSEY</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>PROPS DESIGNER</p>
-              <p className="font-semibold">ADELL ATESHIM</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>SOUND DESIGNER</p>
-              <p className="font-semibold">KEERTAN VENKATESH</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>LIGHTING DESIGNER</p>
-              <p className="font-semibold">DHRUV BHALLA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>LIGHTING DESIGNER</p>
-              <p className="font-semibold">E WENTZEL</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>COSTUME DESIGNER</p>
-              <p className="font-semibold">KAMINI PURUSHOTHAMAN</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>ASSISTANT COSTUME DESIGNER</p>
-              <p className="font-semibold">KAVYA GUPTA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>GRAPHIC DESIGNER</p>
-              <p className="font-semibold">MATEO FELIX CASTILLO</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>GRAPHIC DESIGNER</p>
-              <p className="font-semibold">KRIS AZIABOR</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>CHOREOGRAPHER</p>
-              <p className="font-semibold">KAVYA GUPTA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>ASSISTANT STAGE MANAGER</p>
-              <p className="font-semibold">DEVIN WONG</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>ASSISTANT PRODUCER</p>
-              <p className="font-semibold">MURTAZA KITABWALLA</p>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <p>ASSISTANT PRODUCER</p>
-              <p className="font-semibold">MAYA MOLINA</p>
-            </div>
-          </div>
+            <SectionHeading>Crew</SectionHeading>
+            <ul className="space-y-1.5">
+              {crewPreview.map((member) => (
+                <li key={`${member.role}-${member.name}`}>
+                  <span className="font-semibold">{member.name}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/crew"
+              className="inline-block mt-3 text-sm uppercase hover:opacity-70 transition-opacity"
+              style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+            >
+              Meet the full crew →
+            </Link>
+          </motion.div>
         </div>
       </div>
     </PageShell>

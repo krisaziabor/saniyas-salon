@@ -5,10 +5,10 @@ export default function Notes() {
     <PageShell pathname="/notes">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Playwright Column */}
-        <div className="text-[#FFE4C0]">
+        <div className="text-[#EEB363]">
           <h2
             className="text-sm font-bold mb-4 uppercase opacity-80"
-            style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+            style={{ fontFamily: "var(--font-diatype)", color: "rgba(238, 179, 99, 0.5)" }}
           >
             Aanika Eragam, Playwright
           </h2>
@@ -24,10 +24,10 @@ export default function Notes() {
         </div>
 
         {/* Thank You Column */}
-        <div className="text-[#FFE4C0]">
+        <div className="text-[#EEB363]">
           <h2
             className="text-sm font-bold mb-4 uppercase opacity-80"
-            style={{ fontFamily: "var(--font-diatype)", color: "#EEB363" }}
+            style={{ fontFamily: "var(--font-diatype)", color: "rgba(238, 179, 99, 0.5)" }}
           >
             Thank You
           </h2>
