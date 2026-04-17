@@ -171,7 +171,7 @@ export default function PageShell({
             {showContent && (
               <>
                 <motion.div
-                  className="flex flex-col flex-1"
+                  className="flex flex-col flex-1 min-h-0"
                   initial={
                     pathname === "/"
                       ? false
@@ -186,13 +186,17 @@ export default function PageShell({
                     ease: EASE_OUT,
                   }}
                 >
-                  <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+                  {/*
+                    Mobile: main is only as tall as content so nav + title sit higher and stay
+                    reachable without scrolling past empty flex space. md+: grow to keep nav low.
+                  */}
+                  <main className="flex-none md:flex-1 px-4 sm:px-6 lg:px-8 pt-3 pb-4 sm:pt-6 sm:pb-6 lg:py-10">
                     {children}
                   </main>
                 </motion.div>
 
                 <motion.nav
-                  className="px-4 sm:px-6 lg:px-8 py-6"
+                  className="px-4 sm:px-6 lg:px-8 pt-2 pb-3 sm:py-6"
                   initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
@@ -221,7 +225,7 @@ export default function PageShell({
                 </motion.nav>
 
                 <motion.div
-                  className="px-4 sm:px-6 lg:px-8 pb-8"
+                  className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-8"
                   initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
