@@ -1,52 +1,83 @@
-export const crewMembers = [
+export type CrewMember = {
+  role: string;
+  name: string;
+  /** Omitted when no biography is available yet. */
+  bio?: string;
+};
+
+export type CrewMemberWithBio = CrewMember & { bio: string };
+
+function hasCrewBio(member: CrewMember): member is CrewMemberWithBio {
+  return Boolean(member.bio?.trim());
+}
+
+export const crewMembers: CrewMember[] = [
   {
-    role: "PLAYWRIGHT & ASST DIRECTOR",
-    name: "AANIKA ERAGAM",
-    bio: "Aanika Eragam is a senior English major from Alpharetta, GA. Outside of Saniya's Salon, her other writing credits include her thesis play, which was in the Yale Playwrights Festival last weekend.  She loves plays because they're created in community; she's very grateful for hers — the family, friends, professors, and mentors whom she writes towards."
+    role: "PLAYWRIGHT",
+    name: "AARON MAGLOIRE",
+    bio: "Aaron Magloire is from Queens, and is a second-year MFA Playwriting candidate at the David Geffen School of Drama. He sends his thanks to this entire incredible team, especially Thomas, and, as always, to his mother.",
   },
   {
-    role: "DIRECTOR & SET DESIGNER",
-    name: "EDIE WOLFE LIPSEY",
-    bio: "Edie is a senior double majoring in Humanities and Studio Art. She's worked on many other productions as a set designer, producer, and assistant director, and is so grateful to have directed this brilliant show. Aaanika, cast, crew, everyone--I love you guys and am so, so proud of all of you. Thank you!"
+    role: "DIRECTOR",
+    name: "EMILIANO CÁCERES MANZANO",
+    bio: "Emiliano Cáceres Manzano directs Austria of Rome.",
   },
   {
-    role: "STAGE MANAGER",
-    name: "LILLY PRICE",
-    bio: "Thank you to everyone who worked on this show! It was such a pleasure and I've learned so much from everybody."
+    role: "PRODUCER",
+    name: "GBEMIGA SALU",
+    bio: "Gbemiga Salu (he/him, Producer) is grateful to Victoria for being the best co-producer ever, and to the entire Austria of Rome team for making his first time producing a show at Yale so much fun!",
   },
   {
     role: "PRODUCER",
     name: "VICTORIA MNATSAKANYAN",
-    bio: "Victoria is a junior at Yale who mostly spends her time in various theatres on campus. She extends so much love to Aanika and Edie for inviting her to be part of an immensely special project."
+    bio: "Victoria has been to both Austria and Rome, but neither quite compare to working with this phenomenal team.",
   },
   {
-    role: "LIGHTING DESIGNER",
-    name: "E WENTZEL",
-    bio: "Elio is an enormous fan of Saniya's Salon and all the wonderful people they have met through it. Zey especially give flowers to Aanika for being a great friend through all of Yale and an incredible writer to boot!"
+    role: "STAGE MANAGER",
+    name: "JACK DOZIER",
+    bio: "Jack Dozier (Stage Manager) comes to Austria of Rome as a first-time stage manager. Jack has served as a director (Conversations Après un Enterrement), producer (Merrily We Roll Along), and through a variety of assistant and associate-level roles (Skeleton Crew, Orlando, Exclamation Point and an Act Without Words, and The 25th Putnam County Spelling Bee). He is studying towards a Bachelor's and Master's in Political Science, with a concentration in American Politics, and authors a biannual, national public opinion poll on young adults' political attitudes: the Yale Youth Poll. Jack is a junior in Saybrook College from North Garden, VA, and will produce the 2026 Yale Dramat Commencement Musical, Mean Girls.",
+  },
+  {
+    role: "DRAMATURG",
+    name: "MIA VAN DELOO",
+    bio: "Mia Van Deloo is a second-year M.F.A. candidate in Dramaturgy and Dramatic Criticism at the David Geffen School of Drama where she is a Managing Editor for Theater magazine, the Associate Managing Director for the Yale Cabaret, and a Digital Marketing Assistant for Yale Repertory Theatre. Before coming to Yale, Mia worked at La Jolla Playhouse in various departments including Marketing, Artistic, and Front of House and was the Assistant Dramaturg on The Untitled Unauthorized Hunter S. Thompson Musical. She was most recently the Yale Fellow at Berkeley Repertory Theatre's Ground Floor Summer Residency Lab. Mia is originally from the San Francisco Bay Area and holds a B.A. in Theatre and History from the University of California, San Diego.",
+  },
+  {
+    role: "SET DESIGNER",
+    name: "KAREN LOEWY MOVILLA",
+    bio: "Karen Loewy Movilla she/her/ella is a Colombian multi-hyphenated artist and set designer. She received her bachelor's degree in Film and T.V. from Boston University, and is graduating with an M.F.A from David Geffen School of Drama at Yale.\n\nHer recent design credit include Spunk (Yale Repertory Theatre), Macbeth (DGSD), Kilele (DGSD), Aya Ogawa's Meat Suit (Mercury Lounge), Nani (Yale Cabaret), Twink Death (Yale Cabaret), New England Summer Storms (Columbia University), Our Bodies like Dams (Mabou Mines, The Brick), and The Night Alive (Chain Theatre). Select film credits: August at Twenty-Two (dir. Sophia Castuera), And Along Came Lily (dir. Danielle Hope Diamond).",
   },
   {
     role: "COSTUME DESIGNER",
-    name: "KAMINI PURUSHOTHAMAN",
-    bio: "Kamini Purushothaman is a junior majoring in Archaeology and Anthropology with a focus on South Asia. This is her first time working on a show at Yale, and she has enjoyed helping the cast and production team to bring it to life. She'd like to thank her co-costume designer, Kavya Gupta. "
+    name: "ISABELLE RUPPE",
   },
   {
-    role: "ASST STAGE MANAGER",
-    name: "DEVIN WONG",
-    bio: "Shoutout Aanika 🗣️"
+    role: "PROPS DESIGNER",
+    name: "ANGELICA PERUZZI",
   },
   {
-    role: "ASSISTANT PRODUCER",
-    name: "MURTAZA KITABWALLA",
-    bio: "Murtaza is a double major in Economics and History at Yale who served as the Assistant Producer for Saniya's Salon. He's had a blast bridging the Yale community with local South Asian businesses, finding it incredibly rewarding to foster these local connections while supporting such a talented, majority South Asian crew."
+    role: "SOUND DESIGNER",
+    name: "DOROTHY HA",
+    bio: "Dorothy Ha (Sound Designer, she/her) is a sophomore majoring in History of Art. She's very grateful to have worked on this wonderful production, with an equally wonderful team.",
   },
   {
-    role: "ASSISTANT PRODUCER",
-    name: "MAYA MOLINA",
-    bio: "Maya Molina (Assistant Producer) is a sophomore in JE majoring in environmental studies. Outside of class, she dances on Yale Jashan Bhangra with Kavya, Murtaza & Dhriti, and is the Yale Dramatic Association's production officer. Past credits include Miss Molly (Producer), The 25th Annual Putnam County Spelling Bee (Technical Director), and Intimate Apparel (Production Electrician)."
+    role: "LIGHTING DESIGNER",
+    name: "DORA FIELDS",
+    bio: "Dora Fields (Lighting Designer) is a first-year in Hopper College and is excited to be designing lights for Austria of Rome. At Yale, she served as Lighting Designer for Skeleton Crew, Machinal, and Arcadia, and has assisted with lighting on several other productions. She is grateful to the Austria of Rome team for their collaboration and support.",
   },
   {
-    role: "ASST COSTUME DESIGNER & CHOREOGRAPHER",
-    name: "KAVYA GUPTA",
-    bio: "Kavya is a Junior in Benjamin Franklin College studying Molecular Biology and is the Assitant Costume designer and Dance Choreographer for Saniya's Salon. On campus she is also a member of the Indian traditional folk dance team, Yale Jashan Bhangra and loves to bake in her free time :)"
-  }
+    role: "GRAPHIC DESIGNER",
+    name: "MATEO FELIX CASTILLO",
+  },
+  {
+    role: "GRAPHIC DESIGNER",
+    name: "KRISTOPHER AZIABOR",
+  },
+  {
+    role: "TECHNICAL DIRECTOR",
+    name: "DHRUV BALLA",
+  },
 ];
+
+/** Full credits on Home; Meet the Crew page only lists people with a bio. */
+export const crewMembersWithBio: CrewMemberWithBio[] = crewMembers.filter(hasCrewBio);

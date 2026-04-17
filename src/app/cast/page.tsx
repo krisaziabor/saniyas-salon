@@ -9,9 +9,8 @@ export default function Cast() {
 
   return (
     <PageShell pathname="/cast">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Cast List */}
-        <div className="text-[#EEB363]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 text-[0.8125rem]">
+        <div className="text-aor-title">
           <div className="space-y-2">
             {castMembers.map((member, index) => (
               <div
@@ -20,16 +19,17 @@ export default function Cast() {
                 onClick={() => setSelectedIndex(index)}
               >
                 <p
+                  className="font-name"
                   style={{
-                    color: selectedIndex === index ? "rgba(238, 179, 99, 0.5)" : undefined
+                    color: selectedIndex === index ? "var(--aor-title-muted)" : undefined,
                   }}
                 >
                   {member.character}
                 </p>
                 <p
-                  className="font-semibold"
+                  className="font-name"
                   style={{
-                    color: selectedIndex === index ? "rgba(238, 179, 99, 0.5)" : undefined
+                    color: selectedIndex === index ? "var(--aor-title-muted)" : undefined,
                   }}
                 >
                   {member.actor}
@@ -39,9 +39,8 @@ export default function Cast() {
           </div>
         </div>
 
-        {/* Bio Section */}
-        <div className="text-[#EEB363] mt-8 lg:mt-0">
-          <p className="leading-snug">{castMembers[selectedIndex].bio}</p>
+        <div className="font-body text-aor-body mt-8 lg:mt-0">
+          <p className="leading-snug whitespace-pre-line">{castMembers[selectedIndex].bio}</p>
         </div>
       </div>
     </PageShell>

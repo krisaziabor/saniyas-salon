@@ -1,23 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState, useEffect, createContext } from "react";
-
-const HAS_ENTERED_KEY = "saniyas-salon-has-entered";
+import { sessionStorageEnterKey, siteTitleDisplay } from "@/config/site";
+import AorGradientBackground from "@/components/AorGradientBackground";
 
 /* ─────────────────────────────────────────────────────────
  * ANIMATION STORYBOARD (Home first load) — cinematic / theatrical
  *
- *    0ms     eye vector fades in (opacity 0 → 0.18)
- *  ~1800ms   title SVG fades in (opacity 0 → 1)
- *  ~2800ms   title SVG moves down to footer position
+ *  ~1800ms   title fades in (opacity 0 → 1)
+ *  ~2800ms   title moves down to footer position
  *  ~4400ms   overlay exits; main, nav, footer stagger in
  * ───────────────────────────────────────────────────────── */
 const TIMING = {
-  eyeDuration: 1500,
-  eyeDelay: 0,
   titleAppearDelay: 1800,
   titleMoveDelay: 2800,
   titleMoveDuration: 1600,
@@ -43,11 +39,29 @@ export const HomeEntranceContext = createContext<{
   reducedMotion: false,
 });
 
+function AnimatedTitle({ id, className }: { id?: string; className?: string }) {
+  return (
+    <h1
+      id={id}
+      className={`font-display text-aor-title w-full max-w-[min(100%,56rem)] text-left font-normal leading-[0.95] tracking-tight ${className ?? ""}`}
+      style={{
+        fontSize: "clamp(1.48rem, 5.45vw, 3.5rem)",
+      }}
+    >
+      <span className="inline-block">{siteTitleDisplay.beforeOf}</span>
+      <span className="inline-block w-[0.15em]" aria-hidden />
+      <span className="italic inline-block px-[0.04em]">{siteTitleDisplay.of}</span>
+      <span className="inline-block w-[0.18em]" aria-hidden />
+      <span className="inline-block">{siteTitleDisplay.afterOf}</span>
+    </h1>
+  );
+}
+
 const navLinks = [
   { href: "/", label: "Home", highlightPath: "/" },
   { href: "/cast", label: "Meet The Cast", highlightPath: "/cast" },
   { href: "/crew", label: "Meet The Crew", highlightPath: "/crew" },
-  { href: "/notes", label: "Playwright & Director Notes", highlightPath: "/notes" },
+  { href: "/notes", label: "Director's Note", highlightPath: "/notes" },
   { href: "/thanks", label: "Special Thanks", highlightPath: "/thanks" },
 ] as const;
 
@@ -59,40 +73,37 @@ export default function PageShell({
   pathname: string;
 }) {
   const reducedMotion = useReducedMotion() ?? false;
-  const [hasEntered, setHasEntered] = useState<boolean | null>(() => {
-    if (typeof window === "undefined") return null;
-    return sessionStorage.getItem(HAS_ENTERED_KEY) === "true";
-  });
-  const [svgAnimationComplete, setSvgAnimationComplete] = useState(false);
+  /** `null` until client mount so SSR + first client paint match (avoids hydration mismatch). */
+  const [hasEntered, setHasEntered] = useState<boolean | null>(null);
+  const [entranceAnimationComplete, setEntranceAnimationComplete] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     if (pathname !== "/") {
-      sessionStorage.setItem(HAS_ENTERED_KEY, "true");
-      queueMicrotask(() => setHasEntered(true));
+      sessionStorage.setItem(sessionStorageEnterKey, "true");
+      setHasEntered(true);
+      return;
     }
+    setHasEntered(sessionStorage.getItem(sessionStorageEnterKey) === "true");
   }, [pathname]);
 
-  const handleSvgAnimationComplete = () => {
-    setSvgAnimationComplete(true);
+  const handleEntranceAnimationComplete = () => {
+    setEntranceAnimationComplete(true);
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(HAS_ENTERED_KEY, "true");
+      sessionStorage.setItem(sessionStorageEnterKey, "true");
     }
   };
 
   const isHomeFirstLoad = pathname === "/" && hasEntered === false;
   const showOverlay =
-    pathname === "/" && (hasEntered === null || hasEntered === false) && !svgAnimationComplete;
+    pathname === "/" && hasEntered === false && !entranceAnimationComplete;
   const showContent =
     pathname !== "/" ||
     hasEntered === true ||
-    (pathname === "/" && hasEntered === false && svgAnimationComplete);
+    (pathname === "/" && hasEntered === false && entranceAnimationComplete);
 
   const isEntrance = pathname === "/" && showContent && isHomeFirstLoad;
   const contentStaggerMs = reducedMotion ? 0 : TIMING.contentStagger;
   const contentDurationSec = reducedMotion ? 0 : TIMING.contentDuration / 1000;
-  const eyeDurationSec = reducedMotion ? 0 : TIMING.eyeDuration / 1000;
-  const eyeDelaySec = reducedMotion ? 0 : TIMING.eyeDelay / 1000;
   const titleAppearDelaySec = reducedMotion ? 0 : TIMING.titleAppearDelay / 1000;
   const titleMoveDelaySec = reducedMotion ? 0 : TIMING.titleMoveDelay / 1000;
   const titleMoveDurationSec = reducedMotion ? 0 : TIMING.titleMoveDuration / 1000;
@@ -108,43 +119,26 @@ export default function PageShell({
 
   return (
     <HomeEntranceContext.Provider value={entranceContext}>
-      <div
-        className="min-h-screen relative"
-        style={{ backgroundColor: "#5B200B" }}
-      >
-        {/* Eye: appears first (home only), then title and content */}
-        {pathname === "/" && (
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
-            aria-hidden
-            initial={reducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 0.18 }}
-            transition={{
-              duration: eyeDurationSec,
-              delay: eyeDelaySec,
-              ease: EASE_OUT,
-            }}
-          >
-            <Image
-              src="/svgs/Frame%2018.svg"
-              alt=""
-              width={502}
-              height={340}
-              className="w-[min(100vw,100vh)] h-auto"
-            />
-          </motion.div>
-        )}
+      <div className="aor-site-bg min-h-screen relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden
+        >
+          <AorGradientBackground />
+          {/* Strong frosted layer: blurs the gradient beneath (backdrop), not the UI above z-10 */}
+          <div className="absolute inset-0 backdrop-blur-[56px] sm:backdrop-blur-[80px] md:backdrop-blur-[100px]" />
+        </div>
         <div className="relative z-10 min-h-screen flex flex-col">
           <AnimatePresence>
             {showOverlay && (
               <motion.div
-                className="fixed inset-0 z-20 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+                className="fixed inset-0 z-20 flex items-center justify-start px-4 sm:px-6 lg:px-8"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: overlayExitSec, ease: EASE_OUT }}
               >
                 <motion.div
-                  className="w-full max-w-full origin-center"
+                  className="w-full max-w-full origin-center flex justify-start"
                   style={{ width: "100%" }}
                   initial={{ opacity: reducedMotion ? 1 : 0, y: 0 }}
                   animate={{
@@ -164,17 +158,10 @@ export default function PageShell({
                     },
                   }}
                   onAnimationComplete={
-                    hasEntered === false ? handleSvgAnimationComplete : undefined
+                    hasEntered === false ? handleEntranceAnimationComplete : undefined
                   }
                 >
-                  <Image
-                    src="/titlesvg.svg"
-                    alt="Saniya's Salon"
-                    width={1319}
-                    height={120}
-                    className="w-full h-auto"
-                    priority
-                  />
+                  <AnimatedTitle id="site-title-overlay" />
                 </motion.div>
               </motion.div>
             )}
@@ -199,7 +186,7 @@ export default function PageShell({
                     ease: EASE_OUT,
                   }}
                 >
-                  <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                  <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
                     {children}
                   </main>
                 </motion.div>
@@ -214,10 +201,7 @@ export default function PageShell({
                     ease: EASE_OUT,
                   }}
                 >
-                  <ul
-                    className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 text-[#EEB363] uppercase"
-                    style={{ fontFamily: "var(--font-diatype)" }}
-                  >
+                  <ul className="font-name text-aor-title flex flex-wrap gap-3 sm:gap-5 lg:gap-6 text-[0.8125rem] uppercase">
                     {navLinks.map(({ href, label, highlightPath }) => (
                       <li key={href}>
                         <Link
@@ -225,7 +209,7 @@ export default function PageShell({
                           className="hover:opacity-70 transition-opacity"
                           style={
                             pathname === highlightPath
-                              ? { color: "rgba(238, 179, 99, 0.5)" }
+                              ? { color: "var(--aor-title-muted)" }
                               : undefined
                           }
                         >
@@ -246,15 +230,8 @@ export default function PageShell({
                     ease: EASE_OUT,
                   }}
                 >
-                  <div className="w-full max-w-full">
-                    <Image
-                      src="/titlesvg.svg"
-                      alt="Saniya's Salon"
-                      width={1319}
-                      height={120}
-                      className="w-full h-auto"
-                      priority
-                    />
+                  <div className="w-full max-w-full flex justify-start">
+                    <AnimatedTitle id="site-title-footer" />
                   </div>
                 </motion.div>
               </>
