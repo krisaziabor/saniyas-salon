@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { siteDescription, siteTitle } from "@/config/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const adobeKitId = process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_ID;
 
 export const metadata: Metadata = {
-  title: "Saniya's Salon",
-  description: "A theatrical production",
+  title: siteTitle,
+  description: siteDescription,
+  icons: {
+    icon: [{ url: "/aor-favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({
@@ -24,9 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        {adobeKitId ? (
+          <link rel="stylesheet" href={`https://use.typekit.net/${adobeKitId}.css`} />
+        ) : null}
+      </head>
+      <body className="antialiased">
         {children}
       </body>
     </html>

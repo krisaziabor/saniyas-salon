@@ -1,0 +1,135 @@
+"use client";
+
+import { useId } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+
+/**
+ * Palette sampled from the production background art: deep edge, core maroon, warm center glow.
+ */
+export const AOR_GRADIENT_COLORS = ["#2e0000", "#620101", "#7a1818"] as const;
+
+/* ── Hash utilities (same pattern as GradientSVG.tsx) ───────────────────── */
+
+function hash(name: string): number {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) {
+    h = (h << 5) - h + name.charCodeAt(i);
+    h = h & h;
+  }
+  return Math.abs(h);
+}
+
+function getUnit(number: number, range: number, index?: number): number {
+  const value = number % range;
+  if (index && Math.floor(number / Math.pow(10, index)) % 2 === 0) return -value;
+  return value;
+}
+
+const EASE_IN_OUT: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
+
+type Props = {
+  seed?: string;
+  size?: number;
+  blurDeviation?: number;
+};
+
+export default function AorGradientBackground({
+  seed = "austria-of-rome",
+  size = 100,
+  blurDeviation = 8,
+}: Props) {
+  const maskId = useId();
+  const filterId = useId();
+  const reducedMotion = useReducedMotion() ?? false;
+  const num = hash(seed);
+
+  const colors = AOR_GRADIENT_COLORS;
+  const layers = colors.map((color, i) => ({
+    color,
+    translateX: getUnit(num * (i + 1), size / 10, 1),
+    translateY: getUnit(num * (i + 1), size / 10, 2),
+    scale: 1.2 + getUnit(num * (i + 1), size / 20) / 10,
+    rotate: getUnit(num * (i + 1), 360, 1),
+  }));
+
+  const blobA = reducedMotion
+    ? undefined
+    : {
+        animate: {
+          x: [0, size * 0.04, -size * 0.025, 0],
+          y: [0, -size * 0.03, size * 0.035, 0],
+          rotate: [0, 2.5, -1.5, 0],
+        },
+        transition: {
+          duration: 32,
+          repeat: Infinity,
+          ease: EASE_IN_OUT,
+        },
+      };
+
+  const blobB = reducedMotion
+    ? undefined
+    : {
+        animate: {
+          x: [0, -size * 0.035, size * 0.04, 0],
+          y: [0, size * 0.04, -size * 0.02, 0],
+          rotate: [0, -2, 2, 0],
+        },
+        transition: {
+          duration: 42,
+          repeat: Infinity,
+          ease: EASE_IN_OUT,
+        },
+      };
+
+  return (
+    <svg
+      className="absolute inset-0 h-full w-full"
+      viewBox={`0 0 ${size} ${size}`}
+      fill="none"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden
+    >
+      <mask id={maskId} maskUnits="userSpaceOnUse" x={0} y={0} width={size} height={size}>
+        <rect width={size} height={size} fill="#FFFFFF" />
+      </mask>
+      <g mask={`url(#${maskId})`}>
+        <rect width={size} height={size} fill={layers[0].color} />
+        <motion.g
+          style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
+          {...(blobA ?? {})}
+        >
+          <path
+            filter={`url(#${filterId})`}
+            d="M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z"
+            fill={layers[1].color}
+            transform={`translate(${layers[1].translateX} ${layers[1].translateY}) rotate(${layers[1].rotate} ${size / 2} ${size / 2}) scale(${layers[1].scale})`}
+          />
+        </motion.g>
+        <motion.g
+          style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
+          {...(blobB ?? {})}
+        >
+          <path
+            filter={`url(#${filterId})`}
+            style={{ mixBlendMode: "overlay" }}
+            d="M22.216 24L0 46.75l14.108 38.129L78 86l-3.081-59.276-22.378 4.005 12.972 20.186-23.35 27.395L22.215 24z"
+            fill={layers[2].color}
+            transform={`translate(${layers[2].translateX} ${layers[2].translateY}) rotate(${layers[2].rotate} ${size / 2} ${size / 2}) scale(${layers[2].scale})`}
+          />
+        </motion.g>
+      </g>
+      <defs>
+        <filter
+          id={filterId}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+          <feGaussianBlur stdDeviation={blurDeviation} result="effect1_foregroundBlur" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}

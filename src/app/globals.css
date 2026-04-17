@@ -1,60 +1,84 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Lector FSL";
-  src: url("https://framerusercontent.com/assets/vVIFTY2PuwIapN7qdnad4UmbNg.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Lector FSL";
-  src: url("https://framerusercontent.com/assets/gIKaTQlrDZ7Ii4BzPli1xVtOIIE.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Lector FSL";
-  src: url("https://framerusercontent.com/assets/KKTMS6aDxphvlz9vQ9HtZgLlMrk.woff2") format("woff2");
+  font-family: "Die Grotesk";
+  src: url("/fonts/DieGrotesk-A-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Diatype Semi-Mono";
-  src: url("/fonts/ABCDiatypeSemi-MonoEdu-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #620101;
+  --foreground: #e69075;
+  --aor-title: #fed3bb;
+  --aor-body: #e69075;
+  --aor-title-muted: rgb(254 211 187 / 0.5);
+  --aor-bg: #620101;
+  /* Big Caslon CC loads via Adobe Fonts (Typekit). Kit CSS sets the exact family name. */
+  --font-display: "big-caslon-cc-1", "big-caslon-cc", "Big Caslon CC", "Big Caslon", Georgia,
+    "Times New Roman", serif;
+  --font-body: "Die Grotesk", system-ui, sans-serif;
+  --font-name: Arial Black, "Arial Black", Gadget, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-lector: "Lector FSL", serif;
-  --font-diatype: "Diatype Semi-Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Keep play palette on system dark mode (Tailwind base uses --background). */
+    --background: #620101;
+    --foreground: #e69075;
   }
 }
 
+html {
+  background-color: var(--aor-bg);
+  min-height: 100%;
+}
+
 body {
-  background: #842619;
-  color: var(--foreground);
-  font-family: var(--font-lector);
+  background-color: var(--aor-bg);
+  color: var(--aor-body);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-height: 100dvh;
+}
+
+.aor-site-bg {
+  background-color: var(--aor-bg);
+}
+
+.text-aor-title {
+  color: var(--aor-title);
+}
+
+.text-aor-body {
+  color: var(--aor-body);
+}
+
+.text-aor-title-muted {
+  color: var(--aor-title-muted);
+}
+
+/** Section labels (Cast, Crew) — title color at 80% opacity */
+.text-aor-section-heading {
+  color: rgb(254 211 187 / 0.8);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-name {
+  font-family: var(--font-name);
+  letter-spacing: -0.05em;
 }
