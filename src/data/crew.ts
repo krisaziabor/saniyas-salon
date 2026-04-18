@@ -20,7 +20,6 @@ export const crewMembers: CrewMember[] = [
   {
     role: "DIRECTOR",
     name: "EMILIANO CÁCERES MANZANO",
-    bio: "Emiliano Cáceres Manzano directs Austria of Rome.",
   },
   {
     role: "PRODUCER",
