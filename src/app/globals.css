@@ -8,6 +8,31 @@
   font-display: swap;
 }
 
+/* Same file registered for common weights so `font-bold` / normal text both match the face. */
+@font-face {
+  font-family: "Arial Black";
+  src: url("/fonts/Arial-Black.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arial Black";
+  src: url("/fonts/Arial-Black.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arial Black";
+  src: url("/fonts/Arial-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #620101;
   --foreground: #e69075;
@@ -19,7 +44,8 @@
   --font-display: "big-caslon-cc-1", "big-caslon-cc", "Big Caslon CC", "Big Caslon", Georgia,
     "Times New Roman", serif;
   --font-body: "Die Grotesk", system-ui, sans-serif;
-  --font-name: Arial Black, "Arial Black", Gadget, sans-serif;
+  /* Self-hosted woff2 so nav / names match without OS install */
+  --font-name: "Arial Black", Arial Black, Gadget, system-ui, sans-serif;
 }
 
 @theme inline {
