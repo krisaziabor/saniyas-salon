@@ -40,6 +40,34 @@
   --aor-body: #e69075;
   --aor-title-muted: rgb(254 211 187 / 0.5);
   --aor-bg: #620101;
+  /* Same hues as AorGradientBackground AOR_GRADIENT_COLORS — static under the animated SVG. */
+  --aor-gradient-edge: #2e0000;
+  --aor-gradient-glow: #7a1818;
+  /**
+   * Non-animated gradient base (static SVG + blur stack above in PageShell).
+   * background-color: --aor-bg stays the plain fallback if gradients are unsupported.
+   */
+  /* Top/bottom washes: Safari UI is a flat theme color — nudging edges toward --aor-bg
+     reduces the “stripe” where multi-stop gradients meet the browser chrome. */
+  --aor-static-gradient:
+    linear-gradient(to bottom, var(--aor-bg) 0%, transparent 20%),
+    linear-gradient(to top, var(--aor-bg) 0%, transparent 16%),
+    radial-gradient(
+      ellipse 130% 90% at 72% 22%,
+      rgb(122 24 24 / 0.48) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 100% 85% at 18% 78%,
+      rgb(46 0 0 / 0.88) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 48% 42%,
+      #6d1414 0%,
+      var(--aor-bg) 38%,
+      var(--aor-gradient-edge) 100%
+    );
   /* Big Caslon CC loads via Adobe Fonts (Typekit). Kit CSS sets the exact family name. */
   --font-display: "big-caslon-cc-1", "big-caslon-cc", "Big Caslon CC", "Big Caslon", Georgia,
     "Times New Roman", serif;
@@ -62,12 +90,15 @@
 }
 
 html {
+  color-scheme: dark;
   background-color: var(--aor-bg);
+  background-image: var(--aor-static-gradient);
   min-height: 100%;
 }
 
 body {
   background-color: var(--aor-bg);
+  background-image: var(--aor-static-gradient);
   color: var(--aor-body);
   font-family: var(--font-body);
   font-size: 0.875rem;
@@ -77,6 +108,7 @@ body {
 
 .aor-site-bg {
   background-color: var(--aor-bg);
+  background-image: var(--aor-static-gradient);
 }
 
 .text-aor-title {

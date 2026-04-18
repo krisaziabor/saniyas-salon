@@ -126,9 +126,12 @@ export default function PageShell({
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden
         >
-          <AorGradientBackground />
-          {/* Strong frosted layer: blurs the gradient beneath (backdrop), not the UI above z-10 */}
-          <div className="absolute inset-0 backdrop-blur-[56px] sm:backdrop-blur-[80px] md:backdrop-blur-[100px]" />
+          <AorGradientBackground blurDeviation={5} />
+          {/*
+            Full-viewport backdrop-filter is very expensive on iOS (jank + battery).
+            Skip on small screens; keep a light frost from md up.
+          */}
+          <div className="absolute inset-0 max-md:backdrop-blur-none md:backdrop-blur-[28px] lg:backdrop-blur-[40px]" />
         </div>
         <div className="relative z-10 min-h-[100dvh] flex flex-col">
           <AnimatePresence>
@@ -227,7 +230,7 @@ export default function PageShell({
                 </motion.nav>
 
                 <motion.div
-                  className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-8"
+                  className="px-4 sm:px-6 lg:px-8 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))] sm:pb-8"
                   initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{

@@ -1,7 +1,6 @@
 "use client";
 
 import { useId } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * Palette sampled from the production background art: deep edge, core maroon, warm center glow.
@@ -25,14 +24,16 @@ function getUnit(number: number, range: number, index?: number): number {
   return value;
 }
 
-const EASE_IN_OUT: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
-
 type Props = {
   seed?: string;
   size?: number;
   blurDeviation?: number;
 };
 
+/**
+ * Static layered SVG (no JS-driven motion). Reduces main-thread / compositor work from
+ * infinite Framer Motion loops; pair with CSS `--aor-static-gradient` under this layer.
+ */
 export default function AorGradientBackground({
   seed = "austria-of-rome",
   size = 100,
@@ -40,7 +41,6 @@ export default function AorGradientBackground({
 }: Props) {
   const maskId = useId();
   const filterId = useId();
-  const reducedMotion = useReducedMotion() ?? false;
   const num = hash(seed);
 
   const colors = AOR_GRADIENT_COLORS;
@@ -51,36 +51,6 @@ export default function AorGradientBackground({
     scale: 1.2 + getUnit(num * (i + 1), size / 20) / 10,
     rotate: getUnit(num * (i + 1), 360, 1),
   }));
-
-  const blobA = reducedMotion
-    ? undefined
-    : {
-        animate: {
-          x: [0, size * 0.04, -size * 0.025, 0],
-          y: [0, -size * 0.03, size * 0.035, 0],
-          rotate: [0, 2.5, -1.5, 0],
-        },
-        transition: {
-          duration: 32,
-          repeat: Infinity,
-          ease: EASE_IN_OUT,
-        },
-      };
-
-  const blobB = reducedMotion
-    ? undefined
-    : {
-        animate: {
-          x: [0, -size * 0.035, size * 0.04, 0],
-          y: [0, size * 0.04, -size * 0.02, 0],
-          rotate: [0, -2, 2, 0],
-        },
-        transition: {
-          duration: 42,
-          repeat: Infinity,
-          ease: EASE_IN_OUT,
-        },
-      };
 
   return (
     <svg
@@ -95,21 +65,15 @@ export default function AorGradientBackground({
       </mask>
       <g mask={`url(#${maskId})`}>
         <rect width={size} height={size} fill={layers[0].color} />
-        <motion.g
-          style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
-          {...(blobA ?? {})}
-        >
+        <g style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}>
           <path
             filter={`url(#${filterId})`}
             d="M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z"
             fill={layers[1].color}
             transform={`translate(${layers[1].translateX} ${layers[1].translateY}) rotate(${layers[1].rotate} ${size / 2} ${size / 2}) scale(${layers[1].scale})`}
           />
-        </motion.g>
-        <motion.g
-          style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
-          {...(blobB ?? {})}
-        >
+        </g>
+        <g style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}>
           <path
             filter={`url(#${filterId})`}
             style={{ mixBlendMode: "overlay" }}
@@ -117,7 +81,7 @@ export default function AorGradientBackground({
             fill={layers[2].color}
             transform={`translate(${layers[2].translateX} ${layers[2].translateY}) rotate(${layers[2].rotate} ${size / 2} ${size / 2}) scale(${layers[2].scale})`}
           />
-        </motion.g>
+        </g>
       </g>
       <defs>
         <filter
