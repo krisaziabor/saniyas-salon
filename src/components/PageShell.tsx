@@ -119,7 +119,9 @@ export default function PageShell({
 
   return (
     <HomeEntranceContext.Provider value={entranceContext}>
-      <div className="aor-site-bg min-h-screen relative overflow-hidden">
+      {/* min-h uses dvh (not min-h-screen/100vh): iOS Safari’s 100vh is often taller than the
+          visible viewport when the bottom toolbar is shown, which pushes nav under the chrome. */}
+      <div className="aor-site-bg min-h-[100dvh] relative overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden
@@ -128,7 +130,7 @@ export default function PageShell({
           {/* Strong frosted layer: blurs the gradient beneath (backdrop), not the UI above z-10 */}
           <div className="absolute inset-0 backdrop-blur-[56px] sm:backdrop-blur-[80px] md:backdrop-blur-[100px]" />
         </div>
-        <div className="relative z-10 min-h-screen flex flex-col">
+        <div className="relative z-10 min-h-[100dvh] flex flex-col">
           <AnimatePresence>
             {showOverlay && (
               <motion.div
@@ -143,7 +145,7 @@ export default function PageShell({
                   initial={{ opacity: reducedMotion ? 1 : 0, y: 0 }}
                   animate={{
                     opacity: 1,
-                    y: hasEntered === false ? "calc(50vh - 4rem)" : 0,
+                    y: hasEntered === false ? "calc(50dvh - 4rem)" : 0,
                   }}
                   transition={{
                     opacity: {
